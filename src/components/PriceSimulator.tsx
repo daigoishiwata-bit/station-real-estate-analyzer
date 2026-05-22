@@ -29,6 +29,7 @@ const TSUBO = 3.3058;
 interface Props {
   stationName: string;
   basePricePerTsubo: number;
+  municipalityName?: string;
 }
 
 function formatPrice(man: number): string {
@@ -68,7 +69,7 @@ function SelectGroup<T extends readonly { label: string }[]>({
   );
 }
 
-export default function PriceSimulator({ stationName, basePricePerTsubo }: Props) {
+export default function PriceSimulator({ stationName, basePricePerTsubo, municipalityName }: Props) {
   const [fpIdx, setFpIdx] = useState(2);   // 2LDK
   const [area, setArea] = useState(60);
   const [ageIdx, setAgeIdx] = useState(1); // 5年以内
@@ -102,6 +103,19 @@ export default function PriceSimulator({ stationName, basePricePerTsubo }: Props
           {stationName}駅エリアの相場ベース
         </span>
       </div>
+
+      {/* データ出典エリア表示 */}
+      {municipalityName && (
+        <div
+          className="flex items-center gap-1.5 px-5 py-2.5 text-xs"
+          style={{ background: 'var(--bg-base)', borderBottom: '1px solid var(--border)' }}
+        >
+          <span>📍</span>
+          <span style={{ color: 'var(--text-secondary)' }}>
+            このデータは<span className="font-medium" style={{ color: 'var(--text-primary)' }}>{municipalityName}</span>の取引データをもとにしています
+          </span>
+        </div>
+      )}
 
       <div className="p-5">
         {/* 入力グリッド */}

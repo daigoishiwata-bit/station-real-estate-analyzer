@@ -146,6 +146,7 @@ async function StationBaseSection({ stationId }: { stationId: string }) {
           <PriceSimulator
             stationName={station.stationName}
             basePricePerTsubo={basePricePerTsubo}
+            municipalityName={muniInfo?.name}
           />
         </div>
       )}
