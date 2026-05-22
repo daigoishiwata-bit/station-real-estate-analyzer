@@ -107,12 +107,13 @@ export default function PriceSimulator({ stationName, basePricePerTsubo, municip
       {/* データ出典エリア表示 */}
       {municipalityName && (
         <div
-          className="flex items-center gap-1.5 px-5 py-2.5 text-xs"
+          className="flex items-start gap-1.5 px-5 py-2.5 text-xs leading-relaxed"
           style={{ background: 'var(--bg-base)', borderBottom: '1px solid var(--border)' }}
         >
-          <span>📍</span>
+          <span className="mt-px shrink-0">📍</span>
           <span style={{ color: 'var(--text-secondary)' }}>
-            このデータは<span className="font-medium" style={{ color: 'var(--text-primary)' }}>{municipalityName}</span>の取引データをもとにしています
+            このデータは<span className="font-medium" style={{ color: 'var(--text-primary)' }}>{municipalityName}</span>の取引データをもとにしています。
+            同じ市区町村内の駅は同じデータが適用されます。
           </span>
         </div>
       )}

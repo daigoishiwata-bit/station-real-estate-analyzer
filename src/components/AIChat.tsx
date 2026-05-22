@@ -18,15 +18,29 @@ export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // refで管理してスクロール検知ごとに再レンダーしない
+  const isAtBottomRef = useRef(true);
 
+  // ユーザーが手動スクロールしたとき、底から離れているかを検知
+  const handleScroll = () => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    isAtBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 50;
+  };
+
+  // ユーザーが底付近にいる場合のみコンテナ内をスクロール（ページ全体は動かさない）
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (!isAtBottomRef.current) return;
+    const el = scrollContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages, loading]);
 
   const send = async (text = input) => {
     const trimmed = text.trim();
     if (!trimmed || loading) return;
+    // 送信時は底にリセット（新しいメッセージを必ず見せる）
+    isAtBottomRef.current = true;
 
     const userMsg: Message = { role: 'user', content: trimmed };
     const next = [...messages, userMsg];
@@ -96,6 +110,8 @@ export default function AIChat() {
 
       {/* メッセージエリア：高さを固定してストリーミング中のガタつきを防ぐ */}
       <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
         className="px-4 py-4 space-y-3 overflow-y-auto"
         style={{ height: 340, overscrollBehavior: 'contain' }}
       >
@@ -176,7 +192,6 @@ export default function AIChat() {
           </div>
         )}
 
-        <div ref={bottomRef} />
       </div>
 
       {/* 入力エリア */}
